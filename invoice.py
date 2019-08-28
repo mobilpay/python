@@ -1,8 +1,8 @@
 from decimal import Decimal
 from urllib.parse import quote
 from locale import *
-from mobilPay.address import Address
-from mobilPay.payment.invoice.invoice_item import InvoiceItem
+from address import Address
+from payment.invoice.invoice_item import InvoiceItem
 
 
 class Invoice:

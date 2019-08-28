@@ -2,7 +2,7 @@ import hashlib
 import time
 from random import random
 from urllib.parse import quote
-from mobilPay.address import Address
+from address import Address
 from datetime import datetime
 
 

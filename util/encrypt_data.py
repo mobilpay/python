@@ -19,7 +19,7 @@ class Crypto:
         # Importing keys from files, converting it into the RsaKey object
 
         # this is used for certs
-        cert_data = crypto.load_certificate(crypto.FILETYPE_PEM, file_path)
+        cert_data = crypto.load_certificate(crypto.FILETYPE_PEM, open(file_path, 'r').read().encode("utf-8"))
         public_key_object = cert_data.get_pubkey()
         public_key_string = crypto.dump_publickey(crypto.FILETYPE_PEM, public_key_object)
         public_key = RSA.importKey(public_key_string.decode("utf-8"))

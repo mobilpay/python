@@ -2,8 +2,8 @@ import hashlib
 import time
 import random
 from urllib.parse import unquote
-from mobilPay.payment.request.notify import Notify
-from mobilPay.util.encrypt_data import Crypto
+from payment.request.notify import Notify
+from util.encrypt_data import Crypto
 
 
 class BaseRequest:

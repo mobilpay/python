@@ -1,7 +1,7 @@
 from xml.dom.minidom import parseString
 
-from mobilPay.payment.request.card import Card
-from mobilPay.util.encrypt_data import Crypto
+from payment.request.card import Card
+from util.encrypt_data import Crypto
 
 
 class Request:

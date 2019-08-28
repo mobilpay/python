@@ -1,5 +1,5 @@
-from mobilPay.payment.request.base_request import BaseRequest
-from mobilPay.invoice import Invoice
+from payment.request.base_request import BaseRequest
+from invoice import Invoice
 from datetime import datetime
 from xml.dom.minidom import Document
 
@@ -95,6 +95,9 @@ class Card(BaseRequest):
 
     def get_invoice(self):
         return self._invoice
+
+    def set_payment_type(self, payment_type):
+        self._type = payment_type
 
     def __str__(self):
         return super().__str__() + " " +\
