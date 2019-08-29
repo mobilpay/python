@@ -40,22 +40,26 @@ class Request:
     CONFIRM_ERROR_TYPE_TEMPORARY = 1
     CONFIRM_ERROR_TYPE_PERMANENT = 2
 
-    # def __init__(self):
-    #     super().__init__()
-    #     root_order = document.getElementsByTagName("order")
-    #
-    #     if len(root_order) != 1:
-    #         raise Exception(
-    #             "factory_from_xml -> order element not found" + str(self.ERROR_FACTORY_BY_XML_ORDER_ELEM_NOT_FOUND))
-    #
-    #     order = root_order[0]
-    #
-    #     attr = order.getAttribute("type")
-    #     if attr is None or len(str(attr)) == 0:
-    #         raise Exception("factory_from_xml -> invalid payment request type={} ".format(attr) + str(
-    #             self.ERROR_FACTORY_BY_XML_ORDER_ELEM_NOT_FOUND))
-    #     payment_type = attr
-    #     self.load_xml_type(document, payment_type)
+    def __init__(self, payment_type=None, document=None):
+        root_order = document.getElementsByTagName("order")
+
+        if document is not None:
+            self.payment(payment_type, document)
+        else:
+            self.payment(payment_type)
+
+
+    def payment(self, payment_type, document=None):
+        if payment_type == self.PAYMENT_TYPE_CARD:
+            if document is not None:
+                return Card(document)
+            return Card()
+
+        # TODO ADD OTHER PAYMENT TYPES
+        # if payment_type == self.PAYMENT_TYPE_SMS:
+        #     if document is not None:
+        #         return Card(document)
+        #     return Card()
 
     def factory_from_encrypted(self, env_key, enc_data, private_key_file_path, private_key_password=None):
         private_key = None

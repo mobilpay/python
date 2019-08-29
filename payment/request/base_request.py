@@ -59,7 +59,6 @@ class BaseRequest:
     _orderId = None
     _timestamp = None
 
-    # TODO see if required #_type = PAYMENT_TYPE_SMS
     _type = None
 
     _objPmNotify = None
@@ -108,7 +107,6 @@ class BaseRequest:
     _objReqNotify = None
 
     def __init__(self):
-        # TODO see if number is generated properly
         self._requestIdentifier = hashlib.md5(str(int(random.random() * int(time.time()))).encode('utf-8')).hexdigest()
 
     def _parse_from_xml(self, element):
@@ -156,8 +154,6 @@ class BaseRequest:
 
         elems = element.getElementsByTagName("mobilpay")
         if len(elems) == 1:
-            # TODO to be implemented - Notify
-            # self._objPmNotify = Notify()
             self._objPmNotify = Notify(elems[0])
 
         return self
@@ -171,9 +167,6 @@ class BaseRequest:
             self._outEnvKey = None
             error_message = "Error while loading X509 public key certificate! Reason:"
 
-            # TODO some openssl error string
-            # while(error_message):
-
             raise Exception(error_message + str(self.ERROR_LOAD_X509_CERTIFICATE))
 
         src_data = self._xmlDoc.toprettyxml(indent="\t", newl="\n", encoding="utf-8")
@@ -183,9 +176,6 @@ class BaseRequest:
             self._outEncData = None
             self._outEnvKey = None
             error_message = "Error while encrypting data! Reason:"
-
-            # TODO some openssl error string
-            # while(error_message):
 
             raise Exception(error_message + str(self.ERROR_ENCRYPT_DATA))
 

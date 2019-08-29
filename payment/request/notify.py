@@ -106,7 +106,6 @@ class Notify:
         xml_notify = document.createElement("mobilpay")
         xml_notify.set("timestamp", f"{datetime.now():%Y%m%d%H%M%S}")
 
-        # TODO see what is
         self._crc = hashlib.md5(str(int(random.random() * int(time.time()))).encode('utf-8')).hexdigest()
         xml_notify.set("crc", self._crc)
 
@@ -126,8 +125,6 @@ class Notify:
         if self.promotionAmount is not None:
             xml_notify.appendChild(self.create_text_element(xml_notify, "promotion_amount", self.promotionAmount))
 
-        # TODO see is_null function what does
-        # is_null in php
         if self.current_payment_count is not None:
             xml_notify.appendChild(self.create_text_element(xml_notify, "current_payment_count", self.current_payment_count))
 
