@@ -66,7 +66,7 @@ class Card(BaseRequest):
                 param.appendChild(value)
                 params.appendChild(param)
 
-            xml_doc.append(params)
+            xml_doc.appendChild(params)
 
         if self._returnUrl is not None and len(self._returnUrl) > 0:
             url = xml_doc.createElement("url")

@@ -47,9 +47,8 @@ class Request:
     CONFIRM_ERROR_TYPE_PERMANENT = 2
 
     def __init__(self, payment_type=None, document=None):
-        root_order = document.getElementsByTagName("order")
-
         if document is not None:
+            self.root_order = document.getElementsByTagName("order")
             self.payment(payment_type, document)
         else:
             self.payment(payment_type)
@@ -87,7 +86,7 @@ class Request:
         # src_env_key = base64.b64decode(enc_data)
         src_env_key = env_key
         if src_env_key is False:
-            raise Exception(" Failed decoding envelope key" +
+            raise Exception("Failed decoding envelope key" +
                             str(self.ERROR_CONFIRM_FAILED_DECODING_ENVELOPE_KEY))
 
         result = Crypto.decrypt(src_data, private_key, src_env_key)
