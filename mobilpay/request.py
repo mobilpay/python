@@ -74,40 +74,44 @@ class Request:
                 private_key_file_path, private_key_password)
 
         if private_key is False:
-            raise Exception("Error loading private key" +
-                            str(self.ERROR_CONFIRM_LOAD_PRIVATE_KEY))
+            raise Exception("Error loading private key",
+                            self.ERROR_CONFIRM_LOAD_PRIVATE_KEY)
 
         # src_data = base64.b64decode(enc_data)
         src_data = enc_data
         if src_data is False:
-            raise Exception("Failed decoding data" +
-                            str(self.ERROR_CONFIRM_FAILED_DECODING_DATA))
+            raise Exception("Failed decoding data",
+                            self.ERROR_CONFIRM_FAILED_DECODING_DATA)
 
         # src_env_key = base64.b64decode(enc_data)
         src_env_key = env_key
         if src_env_key is False:
-            raise Exception("Failed decoding envelope key" +
-                            str(self.ERROR_CONFIRM_FAILED_DECODING_ENVELOPE_KEY))
+            raise Exception("Failed decoding envelope key",
+                            self.ERROR_CONFIRM_FAILED_DECODING_ENVELOPE_KEY)
 
         result = Crypto.decrypt(src_data, private_key, src_env_key)
         if result is False:
-            raise Exception("Failed decrypting data" +
-                            str(self.ERROR_CONFIRM_FAILED_DECRYPT_DATA))
+            raise Exception("Failed decrypting data",
+                            self.ERROR_CONFIRM_FAILED_DECRYPT_DATA)
 
-        xml_data = parseString(result.decode("utf-8"))
+        try:
+            xml_data = parseString(result.decode("utf-8"))
+        except:
+            raise Exception("Failed decrypting data",
+                            self.ERROR_CONFIRM_FAILED_DECRYPT_DATA)
 
         root_order = xml_data.getElementsByTagName("order")
 
         if len(root_order) != 1:
             raise Exception(
-                "factory_from_xml -> order element not found" + str(self.ERROR_FACTORY_BY_XML_ORDER_ELEM_NOT_FOUND))
+                "factory_from_xml -> order element not found", self.ERROR_FACTORY_BY_XML_ORDER_ELEM_NOT_FOUND)
 
         order = root_order[0]
 
         attr = order.getAttribute("type")
         if attr is None or len(str(attr)) == 0:
-            raise Exception("factory_from_xml -> invalid payment request type={} ".format(attr) + str(
-                self.ERROR_FACTORY_BY_XML_ORDER_ELEM_NOT_FOUND))
+            raise Exception("factory_from_xml -> invalid payment request type={} ".format(attr),
+                            self.ERROR_FACTORY_BY_XML_ORDER_ELEM_NOT_FOUND)
 
         if attr == self.PAYMENT_TYPE_CARD:
             obj_pm_req = Card(order)
@@ -116,5 +120,5 @@ class Request:
         #     obj_pm_req = SMS()
         # TODO add other payment types
         else:
-            raise Exception("factory_from_xml -> invalid payment request type={} ".format(attr) + str(
-                self.ERROR_FACTORY_BY_XML_INVALID_TYPE))
+            raise Exception("factory_from_xml -> invalid payment request type={} ".format(attr),
+                            self.ERROR_FACTORY_BY_XML_INVALID_TYPE)

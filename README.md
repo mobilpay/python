@@ -21,38 +21,46 @@
 
 - ```pip install cryptography --force-reinstall```
 
+#### Initialization
+
+
+
+###### client side / front end
+-------
+Mobilpay.ro secure url
+-  ex: https://secure.url.com
 ~~~~python
 
-#CLIENT SIDE
-payment_url = 'http://sandboxsecure.mobilpay.ro'
+payment_url = 'secure_mobil_pay_url'
+~~~~
+---
 
-# path to your public certificate that contains the public key
+Calea catre certificatul public
+- ex: C:\Windows\Etc, /Users/YourUser/public.cert.cer
+~~~~python
+
 x509_filePath = "path_to_cert/public_cert.cer"
+~~~~
 
+---
+Initializarea obiectului de plata
+- ex: 
+    - obj_pm_req_card=Card(), 
+    - obj_pm_req_card=Sms(), 
+    - obj_pm_req_card= Bitcoin()
+~~~~python
 obj_pm_req_card = Card()
-
 obj_pm_req_card.set_signature("signature_from_xml")
-
 obj_pm_req_card.set_payment_type("card")
-
 obj_pm_req_card.set_order_id("order_id")
-
 obj_pm_req_card.set_confirm_url("confirm_url")
-
 obj_pm_req_card.set_return_url("return_url")
-
 obj_pm_req_card.set_invoice(Invoice())
-
 obj_pm_req_card.get_invoice().set_currency("RON")
-
 obj_pm_req_card.get_invoice().set_amount("0.10")
-
 obj_pm_req_card.get_invoice().set_token_id("fmndiusnvdfiu")
-
 obj_pm_req_card.get_invoice().set_details("Plata online cu cardul")
-
 billing_address = Address("billing")
-
 billing_address.set_type("person")
 billing_address.set_first_name("Netopia")
 billing_address.set_last_name("Man")
@@ -60,6 +68,7 @@ billing_address.set_address("Acasa Bucuresti")
 billing_address.set_email("contact@netopia.com")
 billing_address.set_mobile_phone("8989989")
 
+"""Setarea adresei de plata"""
 obj_pm_req_card.get_invoice().set_billing_address(billing_address)
 
 shipping_address = Address("shipping")
@@ -71,36 +80,64 @@ shipping_address.set_address("Acasa Bucuresti")
 shipping_address.set_email("contact@netopia.com")
 shipping_address.set_mobile_phone("8989989")
 
+"""Setarea adresei de livrare"""
 obj_pm_req_card.get_invoice().set_shipping_address(shipping_address)
 
+"""Criptarea cheii publice de la locatia setata mai sus"""
 obj_pm_req_card.encrypt(x509_filePath)
 
-# encoded data and env_key
+"""encoded data and env_key"""
 data = obj_pm_req_card.get_enc_data()
 env_key = obj_pm_req_card.get_env_key()
 
+~~~~
 
-# SERVER SIDE
+---
+
+###### Server side / flask, django or another backend python server
+
+Set ```error_code``` ```error_type``` ```error_message``` for the request
+
+~~~~python
 error_code = 0
 error_type = BaseRequest.CONFIRM_ERROR_TYPE_NONE
 error_message = ""
+~~~~
+
+~~~~python
+
+
 if request.method == "POST":
-    # calea catre cheia privata
+
+    """calea catre cheia privata aflata pe server dumneavoastra"""
+
     private_key_path = "path_to_private_key/private.key"
 
-    # get the envelope key and data from the request
+
+    """verifica daca exista env_key si data in request"""
+
     result = request.form.to_dict()
     env_key = result["env_key"]
     env_data = result["data"]
 
-    # env_key si data trebuie parsate pentru ca vin din url, se face cu function unquote din urllib
-    obj_pm_request = Request().factory_from_encrypted(
-        unquote(env_key), unquote(env_data), private_key_path)
 
-    notify = obj_pm_request.get_notify()
-
-    if env_key is not None and len(env_key) > 0 and env_data is not None and len(env_data) > 0:
+    """daca env_key si env_data exista, se incepe decriptarea"""
+    if env_key is not None and len(env_key) > 0 and
+        env_data is not None and len(env_data) > 0:
         try:
+            """env_key si data trebuie parsate pentru ca vin din url, se face cu function unquote din urllib
+
+            in cazul in care decriptarea nu este reusita, raspunsul v-a contine o eroare si mesajul acesteia
+            """
+
+            obj_pm_request = Request().factory_from_encrypted(
+                unquote(env_key), unquote(env_data), private_key_path)
+
+            """obiectul notify contine metode pentru setarea si citirea proprietatilor"""
+
+            notify = obj_pm_request.get_notify()
+
+            """in cazul in care nu este nicio eroare, programul v-a continua"""
             if int(notify.errorCode) == 0:
                 """
                 orice action este insotit de un cod de eroare si de un mesaj de eroare. Acestea pot fi citite
@@ -156,8 +193,8 @@ if request.method == "POST":
             else:
                 """  # update DB, SET status = "rejected"""
                 error_message = notify.errorMessage
-                # error_type = Request.CONFIRM_ERROR_TYPE_TEMPORARY not sure here
-                # error_code = notify.errorCode
+                error_type = Request.CONFIRM_ERROR_TYPE_TEMPORARY
+                error_code = notify.errorCode
         except Exception as e:
             error_type = Request.CONFIRM_ERROR_TYPE_TEMPORARY
             error_code = int(e)
@@ -171,16 +208,7 @@ else:
     error_code = Request.ERROR_CONFIRM_INVALID_POST_METHOD
     error_message = 'invalid request method for payment confirmation'
 
-crc = Document()
-crc_text = crc.createElement("crc")
-crc_value = crc.createTextNode(error_message)
-
-if error_code != 0:
-    crc_text.setAttribute("error_type", str(error_type))
-    crc_text.setAttribute("error_code", str(error_code))
-
-crc_text.appendChild(crc_value)
-crc.appendChild(crc_text)
+crc = Crc(error_code, error_type, error_message).create_crc()
 
 return crc.toprettyxml(indent="\t", newl="\n", encoding="utf-8")
 ~~~~

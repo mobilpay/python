@@ -20,8 +20,8 @@ class Card(BaseRequest):
 
         elems = element.getElementsByTagName("invoice")
         if len(elems) != 1:
-            raise Exception("Card -> load_from_xml failed; invoice element is missing " +
-                            str(self.ERROR_LOAD_FROM_XML_ORDER_INVOICE_ELEM_MISSING))
+            raise Exception("Card -> load_from_xml failed; invoice element is missing ",
+                            self.ERROR_LOAD_FROM_XML_ORDER_INVOICE_ELEM_MISSING)
 
         self._invoice = Invoice(elems[0])
 
@@ -29,9 +29,8 @@ class Card(BaseRequest):
 
     def encrypt(self, x509_file_path):
         if self._signature is None or self._orderId is None or isinstance(self._invoice, Invoice) is not True:
-            raise Exception("One or more mandatory properties are invalid!" +
-                            str(self.ERROR_PREPARE_MANDATORY_PROPERTIES_UNSET) + ":" +
-                            str(self._signature) + ":" + str(self._orderId))
+            raise Exception("One or more mandatory properties are invalid!: " +
+                            str(self._signature) + ":" + str(self._orderId), self.ERROR_PREPARE_MANDATORY_PROPERTIES_UNSET)
 
         xml_doc = Document()
 
@@ -102,5 +101,4 @@ class Card(BaseRequest):
         self._type = payment_type
 
     def __str__(self):
-        return super().__str__() + " " +\
-            self._returnUrl
+        return super().__str__() + " " + self._returnUrl
