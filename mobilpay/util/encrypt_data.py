@@ -49,11 +49,21 @@ class Crypto:
     @staticmethod
     def decrypt(enc_data, private_key, enc_key):
         # encode because the b64decode is taking a byte string as an argument
-        enc_data = base64.b64decode(enc_data)
-        enc_key = base64.b64decode(enc_key)
+        ERROR_ENV_DATA_MISSING = 0x300001f1
+        ERROR_ENV_KEY_MISSING = 0x300001f1
+        try:
+            enc_data = base64.b64decode(enc_data)
+            enc_key = base64.b64decode(enc_key)
+        except:
+            raise Exception("Failed decoding enc_data and enc_key",
+                            ERROR_ENV_DATA_MISSING)
 
-        decrypt = PKCS1_v1_5.new(private_key)
-        decrypted_key = decrypt.decrypt(enc_key, Random.new().read(16))
-        cipher = ARC4.new(decrypted_key)
-        xml_data = cipher.decrypt(enc_data)
-        return xml_data
+        try:
+            decrypt = PKCS1_v1_5.new(private_key)
+            decrypted_key = decrypt.decrypt(enc_key, Random.new().read(16))
+            cipher = ARC4.new(decrypted_key)
+            xml_data = cipher.decrypt(enc_data)
+            return xml_data
+        except:
+            raise Exception("Failed decrypting data",
+                            ERROR_ENV_DATA_MISSING)

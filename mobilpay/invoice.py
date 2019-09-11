@@ -12,6 +12,7 @@ class Invoice:
         self.ERROR_INVALID_CURRENCY = 0x11110002
         self.ERROR_ITEM_INSERT_INVALID_INDEX = 0x11110003
         self.ERROR_LOAD_FROM_XML_CURRENCY_ATTR_MISSING = 0x31110001
+        self.ERROR_LOAD_FROM_XML_AMOUNT_ATTR_MISSING = 0x31110001
 
         self._currency = None
         self._amount = 0
@@ -35,13 +36,13 @@ class Invoice:
 
         self._currency = invoice_node.getAttribute("currency")
         if self._currency is None:
-            raise Exception("Invoice.load_from_xml failed; currency attribute is missing" +
-                            str(self.ERROR_LOAD_FROM_XML_CURRENCY_ATTR_MISSING))
+            raise Exception("Invoice.load_from_xml failed; currency attribute is missing",
+                            self.ERROR_LOAD_FROM_XML_CURRENCY_ATTR_MISSING)
 
         self._amount = invoice_node.getAttribute("amount")
         if self._amount is None:
             raise Exception(
-                "Invoice.load_from_xml failed; amount attribute is missing")
+                "Invoice.load_from_xml failed; amount attribute is missing", self.ERROR_LOAD_FROM_XML_AMOUNT_ATTR_MISSING)
 
         self._amount = Decimal(invoice_node.getAttribute("amount"))
 
@@ -104,8 +105,7 @@ class Invoice:
         invoice_node = document.createElement("invoice")
 
         if self._currency is None:
-            raise Exception("Invalid currency " +
-                            str(self.ERROR_INVALID_CURRENCY))
+            raise Exception("Invalid currency ", self.ERROR_INVALID_CURRENCY)
 
         invoice_node.setAttribute("currency", self._currency)
 

@@ -51,15 +51,15 @@ class Notify:
 
         attr = element.getAttribute('crc')
         if attr is None:
-            raise Exception("Notify -> load_from_xml failed; mandatory crc attribute missing" +
-                            str(self.ERROR_LOAD_FROM_XML_CRC_ATTR_MISSING))
+            raise Exception("Notify -> load_from_xml failed; mandatory crc attribute missing",
+                            self.ERROR_LOAD_FROM_XML_CRC_ATTR_MISSING)
 
         self._crc = attr
 
         elements = element.getElementsByTagName("action")
         if len(elements) != 1:
-            raise Exception("Notify -> load_from_xml failed; mandatory action attribute missing" +
-                            str(self.ERROR_LOAD_FROM_XML_CRC_ATTR_MISSING))
+            raise Exception("Notify -> load_from_xml failed; mandatory action attribute missing",
+                            self.ERROR_LOAD_FROM_XML_CRC_ATTR_MISSING)
 
         self.action = elements[0].firstChild.nodeValue
 

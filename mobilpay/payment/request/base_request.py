@@ -119,13 +119,13 @@ class BaseRequest:
         attr = element.getAttribute("id")
         if attr is None or len(str(attr)) == 0:
             raise Exception(
-                "parse_from_xml failed -> empty order id " + str(self.ERROR_LOAD_FROM_XML_ORDER_ID_ATTR_MISSING))
+                "parse_from_xml failed -> empty order id ", self.ERROR_LOAD_FROM_XML_ORDER_ID_ATTR_MISSING)
         self._orderId = attr
 
         elems = element.getElementsByTagName("signature")
         if len(elems) != 1:
             raise Exception(
-                "parse_from_xml failed -> signature is missing " + str(self.ERROR_LOAD_FROM_XML_SIGNATURE_ELEM_MISSING))
+                "parse_from_xml failed -> signature is missing ", self.ERROR_LOAD_FROM_XML_SIGNATURE_ELEM_MISSING)
         signature = elems[0]
         self._signature = signature.firstChild.nodeValue
 
@@ -175,7 +175,7 @@ class BaseRequest:
             error_message = "Error while loading X509 public key certificate! Reason:"
 
             raise Exception(
-                error_message + str(self.ERROR_LOAD_X509_CERTIFICATE))
+                error_message, self.ERROR_LOAD_X509_CERTIFICATE)
 
         src_data = self._xmlDoc.toprettyxml(
             indent="\t", newl="\n", encoding="utf-8")
@@ -186,7 +186,7 @@ class BaseRequest:
             self._outEnvKey = None
             error_message = "Error while encrypting data! Reason:"
 
-            raise Exception(error_message + str(self.ERROR_ENCRYPT_DATA))
+            raise Exception(error_message, self.ERROR_ENCRYPT_DATA)
 
         self._outEncData, self._outEnvKey = result
 
