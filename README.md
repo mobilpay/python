@@ -193,8 +193,8 @@ if request.method == "POST":
             else:
                 """  # update DB, SET status = "rejected"""
                 error_message = notify.errorMessage
-                # error_type = Request.CONFIRM_ERROR_TYPE_TEMPORARY not sure here
-                # error_code = notify.errorCode
+                error_type = Request.CONFIRM_ERROR_TYPE_TEMPORARY
+                error_code = notify.errorCode
         except Exception as e:
             error_type = Request.CONFIRM_ERROR_TYPE_TEMPORARY
             error_code = int(e)

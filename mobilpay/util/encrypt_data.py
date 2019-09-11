@@ -50,7 +50,6 @@ class Crypto:
     def decrypt(enc_data, private_key, enc_key):
         # encode because the b64decode is taking a byte string as an argument
         ERROR_ENV_DATA_MISSING = 0x300001f1
-        ERROR_ENV_KEY_MISSING = 0x300001f1
         try:
             enc_data = base64.b64decode(enc_data)
             enc_key = base64.b64decode(enc_key)
