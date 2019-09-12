@@ -11,6 +11,7 @@ class Card(BaseRequest):
         super().__init__()
 
         self._invoice = Invoice()
+        self._type = "card"
 
         if root_document is not None:
             self._load_from_xml(root_document)

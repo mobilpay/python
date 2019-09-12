@@ -1,6 +1,6 @@
 from decimal import Decimal
 from urllib.parse import quote
-from locale import LC_ALL
+from locale import LC_ALL, setlocale
 from mobilpay.address import Address
 from mobilpay.payment.invoice.invoice_item import InvoiceItem
 
