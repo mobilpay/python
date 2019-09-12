@@ -8,19 +8,5 @@
 - ```pip install pycrypto```
 - ```pip install pyopenssl```
 
-
-#### Implementation
-    See ```server/main.py``` and ```server/main_local``` for implementation
-
-
-###### Optional
-
-- ```brew install libffi```
-
-- Then reinstall ```cryptography``` or ```boxsdk``` with pip:
-
-- ```pip install cryptography --force-reinstall```
-
 ##### Examples
 -  see client/server implementation in the examples folder
-
