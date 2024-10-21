@@ -36,7 +36,7 @@ def demo():
             try:
                 """env_key si data trebuie parsate pentru ca vin din url, se face cu function unquote din urllib
 
-                in cazul in care decriptarea nu este reusita, raspunsul v-a contine o eroare si mesajul acesteia
+                in cazul in care decriptarea nu este reusita, raspunsul va contine o eroare si mesajul acesteia
                 """
                 obj_pm_request = Request().factory_from_encrypted(
                     unquote(env_key), unquote(env_data), private_key_path)
